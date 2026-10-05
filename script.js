@@ -1,4 +1,4 @@
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwfXSBa_yMxfeyKr6-Va8fg14zxCCGZ1Qpy6jH6k1-pt6vLG20OaxBNhIb-MRJtZJAWqg/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz8d8GY3H-jr82tDmMwwblM0E8Ix4qbFf_gSj_CaYtA0qDDs7wPuBx26QEAp579734ahQ/exec";
 
 const days = document.querySelector('#days');
 const targetDate = new Date(2026, 9, 22, 17, 0, 0);
