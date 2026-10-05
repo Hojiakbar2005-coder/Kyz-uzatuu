@@ -1,3 +1,5 @@
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwfXSBa_yMxfeyKr6-Va8fg14zxCCGZ1Qpy6jH6k1-pt6vLG20OaxBNhIb-MRJtZJAWqg/exec";
+
 const days = document.querySelector('#days');
 const targetDate = new Date(2026, 9, 22, 17, 0, 0);
 const monthName = document.querySelector('.month');
@@ -109,24 +111,47 @@ document.querySelector('#rsvp-form').addEventListener('submit', event => {
   const attending = data.get('attendance') === 'Ооба, барам';
   const answer = {
     name: String(data.get('name')).trim(),
-    attendance: data.get('attendance'),
+    status: String(data.get('attendance')),
     guests: attending ? guestCount : 0,
     savedAt: new Date().toISOString()
   };
   const message = document.querySelector('#form-message');
+  
+  // 1. Сохранение локально (в браузере)
   try {
     const responses = JSON.parse(localStorage.getItem('aidina-rsvp') || '[]');
     responses.push(answer);
     localStorage.setItem('aidina-rsvp', JSON.stringify(responses));
+  } catch (err) {
+    console.error('Ошибка сохранениия локально:', err);
+  }
+
+  // 2. Отправка данных в Google Таблицу
+  message.textContent = 'Жөнөтүлүүдө...';
+  
+  fetch(SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      name: answer.name,
+      status: answer.status,
+      guests: answer.guests
+    })
+  })
+  .then(() => {
     message.textContent = 'Жообуңуз кабыл алынды, рахмат!';
     form.reset();
     guestCount = 1;
     guestCountOutput.value = '1';
     guestCountOutput.textContent = '1';
     setGuestControl(false);
-  } catch {
+  })
+  .catch(() => {
     message.textContent = 'Жообуңузду сактоо мүмкүн болгон жок. Кайра аракет кылыңыз.';
-  }
+  });
 });
 
 // Gentle section reveals; content stays visible if IntersectionObserver is unavailable.
