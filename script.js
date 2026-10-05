@@ -33,7 +33,7 @@ function updateCountdown() {
 updateCountdown();
 window.setInterval(updateCountdown, 30000);
 
-const music = document.querySelector('#audio');
+const music = document.querySelector('#music-track');
 const musicButton = document.querySelector('#music');
 async function toggleMusic() {
   if (music.paused) {
